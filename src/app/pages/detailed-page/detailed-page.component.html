@@ -1,6 +1,6 @@
 <div class="container">
   <div class="grid-container">
-    <div class="name">Booboo</div>
+    <div class="name">{{ animalData.name }}</div>
     <div class="media">
       <div>
         <img src="https://www.carecredit.com/sites/cc/image/article_hero_lab_retriever.jpg" alt="pet photo">
@@ -34,19 +34,15 @@
       scelerisque. Curabitur tempus, eros vel lacinia posuere, mauris orci dictum metus, sit amet pellentesque ligula.
     </div>
     <div class="medical-info">
-      <div>Animal ID:</div>
-      <div>Species:</div>
-      <div>Breed:</div>
-      <div>Age:</div>
-      <div>Sex:</div>
-      <div>Size:</div>
-      <div>Colour:</div>
-      <div>Spayed/Neutered:</div>
-      <div>Declawed:</div>
-      <div>Site:</div>
-      <div>Location:</div>
-      <div>Intake Date:</div>
-      <div>On Hold:</div>
+      <div>Animal ID: {{ animalData.animalId }}</div>
+      <div>Species: {{ animalData.species | titlecase }}</div>
+      <div>Breed: {{ animalData.breed }}</div>
+      <div>Age: {{ animalData.age }}</div>
+      <div>Sex: {{ animalData.gender | titlecase }}</div>
+      <div>Size: {{ animalData.size }}</div>
+      <div>Spayed/Neutered: {{ animalData.spayedOrNeutered ? 'Yes' : 'No' }}</div>
+      <div>Intake Date: {{ animalData.intakeDate }}</div>
+      <div>On Hold: {{ animalData.onHold ? 'Yes' : 'No' }}</div>
     </div>
     <div class="action-button">
       <button mat-stroked-button>Adopt Me!</button>

@@ -1,14 +1,14 @@
 <mat-card class="animal-card" appearance="outlined">
   <mat-card-header>
-    <mat-card-title class="animal-name">{{pet.name}}</mat-card-title>
+    <mat-card-title class="animal-name">{{petData.name}}</mat-card-title>
   </mat-card-header>
-  <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="animal photo">
+  <img mat-card-image src="{{petData.mainPhotoUrl}}" alt="animal photo">
   <mat-card-content>
-    <p>Gender: {{pet.gender}}</p>
-    <p>Breed: {{pet.breed}}</p>
-    <p>Age: {{pet.age}}</p>
+    <p>Gender: {{petData.gender | titlecase}}</p>
+    <p>Breed: {{petData.breed}}</p>
+    <p>Age: {{petData.age}}</p>
   </mat-card-content>
   <mat-card-actions class="actions-container">
-    <button mat-flat-button>Show more</button>
+    <button mat-flat-button (click)="goToDetailsPage(petData.id)">Show more</button>
   </mat-card-actions>
 </mat-card>

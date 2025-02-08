@@ -25,25 +25,6 @@
     flex-grow: 5;
     display: grid;
     color: #333333;
-
-    .cards-grid-container {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1rem;
-      justify-items: center;
-    }
-
-    @media (max-width: 900px) {
-      .cards-grid-container {
-        grid-template-columns: repeat(2, 1fr); /* 2 columns for smaller screens */
-      }
-    }
-
-    @media (max-width: 600px) {
-      .cards-grid-container {
-        grid-template-columns: 1fr; /* 1 column for very small screens */
-      }
-    }
   }
 
   .footer {

@@ -1,0 +1,36 @@
+<div class="filters-container">
+  <form [formGroup]="filtersForm">
+    <mat-form-field>
+      <mat-label>Gender</mat-label>
+      <mat-select formControlName="gender">
+        @for (gender of genderOptions; track gender) {
+          <mat-option [value]="gender">{{ gender }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Species</mat-label>
+      <mat-select formControlName="species">
+        @for (kind of kindOptions; track kind) {
+          <mat-option [value]="kind">{{ kind }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Size</mat-label>
+      <mat-select formControlName="size">
+        @for (size of sizeOptions; track size) {
+          <mat-option [value]="size">{{ size }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </form>
+</div>
+<div class="cards-grid-container">
+  @for (petData of allAnimalsData; track petData) {
+    <div>
+      <app-card [petData]="petData"></app-card>
+    </div>
+  }
+  <div #scrollAnchor class="scroll-anchor"></div>
+</div>
