@@ -1,0 +1,20 @@
+@import '../../shared/styles/variables.scss';
+
+.animal-card {
+  max-width: 300px;
+  color: black;
+  background-color: #FFFFF0;
+
+  .animal-name {
+    font-weight: bold;
+  }
+
+  .actions-container {
+    display: flex;
+    justify-content: center;
+
+    button {
+      background-color: #FFD700;
+    }
+  }
+}

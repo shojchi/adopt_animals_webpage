@@ -1,11 +1,13 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { CardComponent } from './components/card/card.component';
+import { DetailedPageComponent } from './components/detailed-page/detailed-page.component';
+import { MatToolbar } from '@angular/material/toolbar';
 
 @Component({
   standalone: true,
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [CardComponent, DetailedPageComponent, MatToolbar],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })

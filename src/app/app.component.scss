@@ -1,0 +1,56 @@
+@import './shared/styles/variables.scss';
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100vh;
+  background-color: #F5F5DC;
+  color: black;
+
+  .header {
+    position: sticky;
+    inset: 0 0;
+    background-color: #cb3741;
+    font-weight: bold;
+    flex-grow: 1;
+
+    h1 {
+      cursor: pointer;
+    }
+  }
+
+  .main {
+    padding: 1.5rem;
+    flex-grow: 5;
+    display: grid;
+    color: #333333;
+
+    .cards-grid-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      justify-items: center;
+    }
+
+    @media (max-width: 900px) {
+      .cards-grid-container {
+        grid-template-columns: repeat(2, 1fr); /* 2 columns for smaller screens */
+      }
+    }
+
+    @media (max-width: 600px) {
+      .cards-grid-container {
+        grid-template-columns: 1fr; /* 1 column for very small screens */
+      }
+    }
+  }
+
+  .footer {
+    position: sticky;
+    inset: 0 auto auto 10px;
+    background-color: #182026;
+    flex-grow: 1;
+  }
+}
+
