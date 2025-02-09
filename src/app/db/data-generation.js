@@ -2,7 +2,7 @@
 const dogNames = ["Max", "Bella", "Charlie", "Luna", "Cooper", "Daisy", "Rocky", "Milo", "Buddy", "Sadie", "Oliver",
   "Lucy", "Bear", "Lily", "Zoe", "Toby", "Chloe", "Leo", "Duke", "Sophie", "Bailey", "Riley", "Maggie", "Jack", "Finn",
   "Buster", "Ruby", "Samson", "Murphy", "Jasper", "Winston", "Penny", "Rosie", "Bentley", "Lola", "Zeus", "Gizmo",
-  "Maggie", "Jax", "Harley", "Oscar", "Willow", "Coco", "Rex", "Henry", "Macy", "Hunter", "Nala", "Tucker", "Bella",];
+  "Maggie", "Jax", "Harley", "Oscar", "Willow", "Coco", "Rex", "Henry", "Macy", "Hunter", "Nala", "Tucker", "Bella"];
 
 // 50
 const dogBreeds = ["Labrador Retriever", "German Shepherd", "Golden Retriever", "Bulldog", "Poodle", "Beagle",
@@ -59,8 +59,8 @@ const generatedData = [];
 const generateData = (id, name, breed, species, images) => {
   return {
     id,
-    name,
-    breed,
+    name: name.toLowerCase(),
+    breed: breed.toLowerCase(),
     gender: genders[randomizer(2)],
     species,
     animalId: 'test',

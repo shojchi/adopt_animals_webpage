@@ -1,10 +1,13 @@
-import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { CardComponent } from "../../components/card/card.component";
 import { AnimalsDataService } from "../../shared/services/animals-data.service";
 import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { MatInput } from '@angular/material/input';
+import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
   standalone: true,
@@ -15,7 +18,11 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
     MatSelectModule,
     MatOptionModule,
     MatFormFieldModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatInput,
+    MatRadioGroup,
+    MatRadioButton,
+    MatProgressSpinner
   ],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.scss'
@@ -26,32 +33,39 @@ export class HomePageComponent implements OnInit {
   @ViewChild('scrollAnchor', { static: true }) scrollAnchor!: ElementRef;
   public allAnimalsData: any = [];
   private page = 1;
-  public genderOptions = ['Male', 'Female'];
-  public kindOptions = ['Cat', 'Dog'];
-  public sizeOptions = ['Small', 'Medium', 'Large'];
+  // public genderOptions = ['All', 'Male', 'Female'];
+  // public kindOptions = ['All', 'Cat', 'Dog'];
+  public searchForNameAndBreed = '';
   public filtersForm: any;
-  private filterRecentlyApplied: boolean = false;
-
+  animals = signal<any[]>([]);
+  isLoading = signal<boolean>(false);
 
   ngOnInit(): void {
     this.getFilteredAnimalsData(this.page);
     this.filtersForm = this.fb.group({
       species: [''],
       gender: [''],
-      size: ['']
+      searchForNameAndBreed: ['']
     });
 
     this.filtersForm.valueChanges.subscribe((formValues: any) => {
+      let limit: number | undefined = undefined;
       this.page = 1;
-      this.filterRecentlyApplied = !!(formValues.species || formValues.gender || formValues.size);
-      this.getFilteredAnimalsData(this.page, formValues.species, formValues.gender, formValues.size);
+      this.allAnimalsData = [];
+
+      if (formValues.searchForNameAndBreed) {
+        limit = 0;
+      }
+      this.animals.set([]);
+
+      this.getFilteredAnimalsData(this.page, limit, formValues.species, formValues.gender, formValues.searchForNameAndBreed);
     });
     //TODO: need to fix problem with calling intersection right after init uploading data / loading val??
     setTimeout(() => {
       const observer = new IntersectionObserver(entries => {
         if (entries[0].isIntersecting) {
           this.page++;
-          this.getFilteredAnimalsData(this.page, this.filtersForm.value.species, this.filtersForm.value.gender, this.filtersForm.value.size);
+          this.getFilteredAnimalsData(this.page, this.filtersForm.value.species, this.filtersForm.value.gender, this.filtersForm.value.searchForNameAndBreed);
         }
       });
 
@@ -59,13 +73,12 @@ export class HomePageComponent implements OnInit {
     }, 1000)
   }
 
-  getFilteredAnimalsData(page: number = 1, species?: string, gender?: string, size?: string) {
-    this.animalsDataService.getFilteredAnimalsData(page, species, gender, size).subscribe((res: any) => {
-      if (this.filterRecentlyApplied) {
-        this.allAnimalsData = [];
-        this.filterRecentlyApplied = false;
-      }
+  getFilteredAnimalsData(page: number = 1, limit: number = 10, species?: string, gender?: string, searchText?: string) {
+    this.isLoading.set(true);
+    this.animalsDataService.getFilteredAnimalsData(page, limit, species, gender, searchText).subscribe((res: any) => {
       this.allAnimalsData = [...this.allAnimalsData, ...res];
+      this.animals.set([...this.animals(), ...res]);
+      this.isLoading.set(false);
     })
   }
 }
