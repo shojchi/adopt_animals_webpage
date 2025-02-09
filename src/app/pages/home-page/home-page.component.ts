@@ -1,6 +1,6 @@
 import { Component, ElementRef, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { CardComponent } from "../../components/card/card.component";
-import { AnimalsDataService } from "../../shared/services/animals-data.service";
+import { AnimalsDataService } from "../../shared/services/data/animals-data.service";
 import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
@@ -65,7 +65,7 @@ export class HomePageComponent implements OnInit {
       const observer = new IntersectionObserver(entries => {
         if (entries[0].isIntersecting) {
           this.page++;
-          this.getFilteredAnimalsData(this.page, this.filtersForm.value.species, this.filtersForm.value.gender, this.filtersForm.value.searchForNameAndBreed);
+          this.getFilteredAnimalsData(this.page, 10, this.filtersForm.value.species, this.filtersForm.value.gender, this.filtersForm.value.searchForNameAndBreed);
         }
       });
 
@@ -76,7 +76,6 @@ export class HomePageComponent implements OnInit {
   getFilteredAnimalsData(page: number = 1, limit: number = 10, species?: string, gender?: string, searchText?: string) {
     this.isLoading.set(true);
     this.animalsDataService.getFilteredAnimalsData(page, limit, species, gender, searchText).subscribe((res: any) => {
-      this.allAnimalsData = [...this.allAnimalsData, ...res];
       this.animals.set([...this.animals(), ...res]);
       this.isLoading.set(false);
     })

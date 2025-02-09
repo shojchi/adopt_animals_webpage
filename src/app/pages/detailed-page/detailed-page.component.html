@@ -45,7 +45,9 @@
       <div>On Hold: {{ animalData.onHold ? 'Yes' : 'No' }}</div>
     </div>
     <div class="action-button">
-      <button mat-stroked-button>Adopt Me!</button>
+      @if (showAdoptButton) {
+        <button mat-stroked-button (click)="makeAdoption()">Adopt Me!</button>
+      }
     </div>
   </div>
 </div>
