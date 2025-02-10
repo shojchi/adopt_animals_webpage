@@ -8,14 +8,14 @@
   background-color: #F5F5DC;
   color: black;
 
-  .header {
+  .header-container {
     position: sticky;
     inset: 0 0;
     background-color: #cb3741;
     font-weight: bold;
     flex-grow: 1;
 
-    h1 {
+    .header {
       cursor: pointer;
     }
   }

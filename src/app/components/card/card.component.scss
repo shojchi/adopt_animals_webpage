@@ -13,12 +13,12 @@
     display: flex;
     justify-content: center;
 
-    button {
+    .show-more-button {
       background-color: #FFD700;
     }
   }
 
-  img {
+  .animal-img {
     height: 298px;
     width: 298px;
     object-fit: cover;
