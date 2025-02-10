@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatButton } from '@angular/material/button';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TitleCasePipe } from '@angular/common';
 import { NotificationsService } from '../../shared/services/notifications/notifications.service';
 import { AnimalFullInfo } from '../../shared/interfaces/animaData';
@@ -11,7 +11,8 @@ import { UnsubscribeOnDestroy } from '../../shared/unsubscribeOnDestroy';
   selector: 'app-detailed-page',
   imports: [
     MatButton,
-    TitleCasePipe
+    TitleCasePipe,
+    RouterLink
   ],
   templateUrl: './detailed-page.component.html',
   styleUrl: './detailed-page.component.scss',

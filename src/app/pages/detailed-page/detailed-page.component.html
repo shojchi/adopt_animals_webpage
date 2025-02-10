@@ -1,4 +1,5 @@
 <div class="container">
+  <button class="route-button" mat-flat-button routerLink="/">Back to main</button>
   <div class="grid-container">
     <div class="name">{{ animalData.name | titlecase }}</div>
     <div class="media">
@@ -16,7 +17,8 @@
           alt="pet photo">
       </div>
     </div>
-    <div class="description">Meet {{ animalData.name | titlecase }}, a lovable {{ animalData.age }}-old {{ animalData.breed | titlecase }}
+    <div class="description">Meet {{ animalData.name | titlecase }}, a
+      lovable {{ animalData.age + '-old' }} {{ animalData.breed | titlecase }}
       looking for a forever home! With a gentle nature and a heart full of love,
       {{ animalData.name | titlecase }} enjoys playing fetch and cuddling on the couch.
       {{ animalData.name | titlecase }} thrives on companionship and loves being around people. Whether it’s going for
