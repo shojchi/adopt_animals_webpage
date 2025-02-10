@@ -17,5 +17,4 @@ export class NotificationsService {
   getSharedData<T>(): Subject<T> {
     return this.sharedSubject as Subject<T>;
   }
-
 }
