@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { map } from 'rxjs';
+import { map, Observable } from 'rxjs';
+import { AnimalFullInfo } from '../../interfaces/animaData';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,7 @@ export class AnimalsDataService {
   constructor(private http: HttpClient) {
   }
 
-  getFilteredAnimalsData(page: number, limit?: number, species?: string, gender?: string, searchText?: string): any {
+  getFilteredAnimalsData(page: number, limit?: number, species?: string, gender?: string, searchText?: string): Observable<AnimalFullInfo[]> {
     let paginatedParams = '';
     if (limit) {
       const start = (page - 1) * limit;
@@ -26,16 +27,16 @@ export class AnimalsDataService {
       params = params.set('breed_like', searchText.trim().toLowerCase());
     }
 
-    if (!limit) {
-      return this.http.get(`http://localhost:3000/animalsData${paginatedParams}`, { params }).pipe(map((res: any) => {
-        return res.filter((animal: any) => animal.breed.startsWith(searchText) || animal.name.startsWith(searchText));
+    if (!limit && searchText) {
+      return this.http.get<AnimalFullInfo[]>(`http://localhost:3000/animalsData${paginatedParams}`, { params }).pipe(map((res: AnimalFullInfo[]) => {
+        return res.filter((animal: AnimalFullInfo) => animal.breed.startsWith(searchText) || animal.name.startsWith(searchText));
       }));
     }
 
-    return this.http.get(`http://localhost:3000/animalsData${paginatedParams}`, { params });
+    return this.http.get<AnimalFullInfo[]>(`http://localhost:3000/animalsData${paginatedParams}`, { params });
   }
 
-  getAnimalDetailedData(id: string) {
-    return this.http.get(`http://localhost:3000/animalsData/${id}`);
+  getAnimalDetailedData(id: string): Observable<AnimalFullInfo> {
+    return this.http.get<AnimalFullInfo>(`http://localhost:3000/animalsData/${id}`);
   }
 }

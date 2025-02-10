@@ -3,6 +3,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
 import { TitleCasePipe } from '@angular/common';
+import { AnimalFullInfo } from '../../shared/interfaces/animaData';
 
 @Component({
   standalone: true,
@@ -16,7 +17,7 @@ import { TitleCasePipe } from '@angular/common';
   styleUrl: './card.component.scss'
 })
 export class CardComponent implements OnInit {
-  @Input() petData: any;
+  @Input() petData: Partial<AnimalFullInfo> = {};
   private router = inject(Router);
 
   ngOnInit(): void {

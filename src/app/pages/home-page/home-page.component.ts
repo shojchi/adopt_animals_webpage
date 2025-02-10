@@ -4,10 +4,12 @@ import { AnimalsDataService } from "../../shared/services/data/animals-data.serv
 import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatInput } from '@angular/material/input';
 import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { AnimalFullInfo } from '../../shared/interfaces/animaData';
+import { FiltersForm } from '../../shared/interfaces/filtersForm';
 
 @Component({
   standalone: true,
@@ -28,27 +30,29 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
   styleUrl: './home-page.component.scss'
 })
 export class HomePageComponent implements OnInit {
-  private animalsDataService = inject(AnimalsDataService);
-  private fb = inject(FormBuilder)
-  @ViewChild('scrollAnchor', { static: true }) scrollAnchor!: ElementRef;
-  public allAnimalsData: any = [];
-  private page = 1;
-  // public genderOptions = ['All', 'Male', 'Female'];
-  // public kindOptions = ['All', 'Cat', 'Dog'];
-  public searchForNameAndBreed = '';
-  public filtersForm: any;
-  animals = signal<any[]>([]);
-  isLoading = signal<boolean>(false);
-
-  ngOnInit(): void {
-    this.getFilteredAnimalsData(this.page);
+  constructor() {
     this.filtersForm = this.fb.group({
       species: [''],
       gender: [''],
       searchForNameAndBreed: ['']
     });
+  }
+  private animalsDataService = inject(AnimalsDataService);
+  private fb = inject(FormBuilder)
+  @ViewChild('scrollAnchor', { static: true }) scrollAnchor!: ElementRef;
+  public allAnimalsData: AnimalFullInfo[] = [];
+  private page = 1;
+  // public genderOptions = ['All', 'Male', 'Female'];
+  // public kindOptions = ['All', 'Cat', 'Dog'];
+  public searchForNameAndBreed = '';
+  public filtersForm: FormGroup;
+  animals = signal<AnimalFullInfo[]>([]);
+  isLoading = signal<boolean>(false);
 
-    this.filtersForm.valueChanges.subscribe((formValues: any) => {
+  ngOnInit(): void {
+    this.getFilteredAnimalsData(this.page);
+
+    this.filtersForm.valueChanges.subscribe((formValues: FiltersForm) => {
       let limit: number | undefined = undefined;
       this.page = 1;
       this.allAnimalsData = [];
@@ -75,7 +79,7 @@ export class HomePageComponent implements OnInit {
 
   getFilteredAnimalsData(page: number = 1, limit: number = 10, species?: string, gender?: string, searchText?: string) {
     this.isLoading.set(true);
-    this.animalsDataService.getFilteredAnimalsData(page, limit, species, gender, searchText).subscribe((res: any) => {
+    this.animalsDataService.getFilteredAnimalsData(page, limit, species, gender, searchText).subscribe((res: AnimalFullInfo[]) => {
       this.animals.set([...this.animals(), ...res]);
       this.isLoading.set(false);
     })

@@ -1,6 +1,6 @@
 <div class="container">
   <div class="grid-container">
-    <div class="name">{{ animalData.name }}</div>
+    <div class="name">{{ animalData.name | titlecase }}</div>
     <div class="media">
       <div>
         <img src="https://www.carecredit.com/sites/cc/image/article_hero_lab_retriever.jpg" alt="pet photo">
@@ -16,32 +16,26 @@
           alt="pet photo">
       </div>
     </div>
-    <div class="description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque sit amet condimentum
-      augue, sed vestibulum libero. Mauris sagittis massa quis ex porta, quis consequat ipsum vehicula. Ut facilisis dui
-      eu dolor consectetur, ut aliquet velit bibendum. Aenean aliquam felis sit amet varius faucibus. Pellentesque et
-      laoreet dui, eu bibendum sem. Phasellus in tempus purus. Phasellus pretium purus quis nibh fringilla faucibus.
-      Maecenas in euismod sem. Duis vitae sollicitudin ante, eget fermentum dui. Pellentesque habitant morbi tristique
-      senectus et netus et malesuada fames ac turpis egestas. Vestibulum vel efficitur nisi. Mauris at molestie odio.
-      Praesent ut tincidunt nisl, sed tempus ante.
-
-      In at quam vel velit suscipit eleifend. Nulla lacus ligula, consequat non tristique ut, imperdiet eu leo. Aenean
-      dapibus urna quis risus porttitor rhoncus. In vulputate lectus fermentum sem accumsan venenatis. Aliquam feugiat
-      rhoncus faucibus. Aliquam feugiat id augue et pharetra. Maecenas posuere bibendum diam, a imperdiet tortor
-      convallis ac.
-
-      Nullam a nibh dolor. Mauris vitae erat volutpat, mattis ex quis, consectetur metus. Curabitur efficitur mattis
-      eros, et fermentum magna tempor sit amet. Nam aliquam ex eu velit vehicula finibus. Cras congue nisi sed auctor
-      scelerisque. Curabitur tempus, eros vel lacinia posuere, mauris orci dictum metus, sit amet pellentesque ligula.
+    <div class="description">Meet {{ animalData.name | titlecase }}, a lovable {{ animalData.age }}-old {{ animalData.breed | titlecase }}
+      looking for a forever home! With a gentle nature and a heart full of love,
+      {{ animalData.name | titlecase }} enjoys playing fetch and cuddling on the couch.
+      {{ animalData.name | titlecase }} thrives on companionship and loves being around people. Whether it’s going for
+      long walks, exploring new
+      places, or simply lounging at home, {{ animalData.gender === "male" ? "him" : "her" }} will be your loyal friend.
+      With a loving heart and a playful spirit,
+      {{ animalData.name | titlecase }} is ready to bring joy and warmth into your life. Adopt today and
+      give {{ animalData.gender === "male" ? "him" : "her" }} a second
+      chance! 🐾❤️
     </div>
     <div class="medical-info">
-      <div>Animal ID: {{ animalData.animalId }}</div>
+      <div>Animal ID: 10189532</div>
       <div>Species: {{ animalData.species | titlecase }}</div>
-      <div>Breed: {{ animalData.breed }}</div>
+      <div>Breed: {{ animalData.breed | titlecase }}</div>
       <div>Age: {{ animalData.age }}</div>
       <div>Sex: {{ animalData.gender | titlecase }}</div>
       <div>Size: {{ animalData.size }}</div>
       <div>Spayed/Neutered: {{ animalData.spayedOrNeutered ? 'Yes' : 'No' }}</div>
-      <div>Intake Date: {{ animalData.intakeDate }}</div>
+      <div>Intake Date: 01/10/2025</div>
       <div>On Hold: {{ animalData.onHold ? 'Yes' : 'No' }}</div>
     </div>
     <div class="action-button">
