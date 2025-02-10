@@ -1,4 +1,13 @@
-import { Component, ElementRef, inject, OnInit, signal, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  inject,
+  OnInit,
+  signal,
+  ViewChild,
+  WritableSignal
+} from '@angular/core';
 import { CardComponent } from "../../components/card/card.component";
 import { AnimalsDataService } from "../../shared/services/data/animals-data.service";
 import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
@@ -27,9 +36,24 @@ import { FiltersForm } from '../../shared/interfaces/filtersForm';
     MatProgressSpinner
   ],
   templateUrl: './home-page.component.html',
-  styleUrl: './home-page.component.scss'
+  styleUrl: './home-page.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HomePageComponent implements OnInit {
+  @ViewChild('scrollAnchor', { static: true }) scrollAnchor!: ElementRef;
+
+  private animalsDataService = inject(AnimalsDataService);
+  private fb: FormBuilder = inject(FormBuilder);
+  private page: number = 1;
+
+  // public genderOptions = ['All', 'Male', 'Female'];
+  // public kindOptions = ['All', 'Cat', 'Dog'];
+  public searchForNameAndBreed: string = '';
+  public filtersForm: FormGroup;
+  public allAnimalsData: AnimalFullInfo[] = [];
+  animals: WritableSignal<AnimalFullInfo[]> = signal<AnimalFullInfo[]>([]);
+  isLoading: WritableSignal<boolean> = signal<boolean>(false);
+
   constructor() {
     this.filtersForm = this.fb.group({
       species: [''],
@@ -37,17 +61,6 @@ export class HomePageComponent implements OnInit {
       searchForNameAndBreed: ['']
     });
   }
-  private animalsDataService = inject(AnimalsDataService);
-  private fb = inject(FormBuilder)
-  @ViewChild('scrollAnchor', { static: true }) scrollAnchor!: ElementRef;
-  public allAnimalsData: AnimalFullInfo[] = [];
-  private page = 1;
-  // public genderOptions = ['All', 'Male', 'Female'];
-  // public kindOptions = ['All', 'Cat', 'Dog'];
-  public searchForNameAndBreed = '';
-  public filtersForm: FormGroup;
-  animals = signal<AnimalFullInfo[]>([]);
-  isLoading = signal<boolean>(false);
 
   ngOnInit(): void {
     this.getFilteredAnimalsData(this.page);
@@ -64,6 +77,7 @@ export class HomePageComponent implements OnInit {
 
       this.getFilteredAnimalsData(this.page, limit, formValues.species, formValues.gender, formValues.searchForNameAndBreed);
     });
+
     //TODO: need to fix problem with calling intersection right after init uploading data / loading val??
     setTimeout(() => {
       const observer = new IntersectionObserver(entries => {
@@ -77,7 +91,7 @@ export class HomePageComponent implements OnInit {
     }, 1000)
   }
 
-  getFilteredAnimalsData(page: number = 1, limit: number = 10, species?: string, gender?: string, searchText?: string) {
+  getFilteredAnimalsData(page: number = 1, limit: number = 10, species?: string, gender?: string, searchText?: string): void {
     this.isLoading.set(true);
     this.animalsDataService.getFilteredAnimalsData(page, limit, species, gender, searchText).subscribe((res: AnimalFullInfo[]) => {
       this.animals.set([...this.animals(), ...res]);

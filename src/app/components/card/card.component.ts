@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
@@ -14,7 +14,8 @@ import { AnimalFullInfo } from '../../shared/interfaces/animaData';
     TitleCasePipe
   ],
   templateUrl: './card.component.html',
-  styleUrl: './card.component.scss'
+  styleUrl: './card.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CardComponent implements OnInit {
   @Input() petData: Partial<AnimalFullInfo> = {};
@@ -23,7 +24,7 @@ export class CardComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  goToDetailsPage(id: number) {
+  goToDetailsPage(id: number): void {
     this.router.navigate(['/details'], { queryParams: { id } });
   }
 }

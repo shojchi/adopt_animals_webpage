@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { AnimalsDataService } from '../../shared/services/data/animals-data.service';
 import { ActivatedRoute } from '@angular/router';
@@ -14,7 +14,8 @@ import { AnimalFullInfo } from '../../shared/interfaces/animaData';
     TitleCasePipe
   ],
   templateUrl: './detailed-page.component.html',
-  styleUrl: './detailed-page.component.scss'
+  styleUrl: './detailed-page.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DetailedPageComponent implements OnInit {
   private animalsDataService = inject(AnimalsDataService);
@@ -28,14 +29,14 @@ export class DetailedPageComponent implements OnInit {
     this.getPetData();
   }
 
-  getPetData() {
+  getPetData(): void {
     const id = this.route.snapshot.queryParamMap.get('id');
     this.animalsDataService.getAnimalDetailedData(id as string).subscribe((res: AnimalFullInfo) => {
       this.animalData = res
     });
   }
 
-  makeAdoption() {
+  makeAdoption(): void {
     this.showAdoptButton = false;
     this._notificationsService.setSharedData(this.animalData!.name);
   }
