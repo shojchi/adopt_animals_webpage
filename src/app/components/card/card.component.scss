@@ -2,11 +2,11 @@
 
 .animal-card {
   max-width: 300px;
-  color: black;
-  background-color: #FFFFF0;
+  background-color: $secondary-background-color;
 
   .animal-name {
     font-weight: bold;
+    padding-bottom: 10px;
   }
 
   .actions-container {
@@ -14,7 +14,8 @@
     justify-content: center;
 
     .show-more-button {
-      background-color: #FFD700;
+      background-color: $button-background-color;
+      color: $button-text-color;
     }
   }
 

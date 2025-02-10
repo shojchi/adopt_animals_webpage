@@ -5,8 +5,7 @@
   flex-direction: column;
   justify-content: space-between;
   min-height: 100vh;
-  background-color: #F5F5DC;
-  color: black;
+  background-color: $background-color;
 
   .header-container {
     position: sticky;
@@ -16,6 +15,7 @@
     flex-grow: 1;
 
     .header {
+      color: $white-color;
       cursor: pointer;
     }
   }
@@ -32,6 +32,7 @@
     inset: 0 auto auto 10px;
     background-color: #182026;
     flex-grow: 1;
+    color: $white-color;
   }
 }
 
