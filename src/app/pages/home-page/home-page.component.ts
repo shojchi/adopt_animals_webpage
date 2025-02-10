@@ -20,7 +20,7 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { AnimalFullInfo } from '../../shared/interfaces/animaData';
 import { FiltersForm } from '../../shared/interfaces/filtersForm';
 import { UnsubscribeOnDestroy } from '../../shared/unsubscribeOnDestroy';
-import { takeUntil } from 'rxjs';
+import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -57,9 +57,9 @@ export class HomePageComponent extends UnsubscribeOnDestroy implements OnInit {
   constructor() {
     super();
     this.filtersForm = this.fb.group({
-      species: [''],
-      gender: [''],
-      searchForNameAndBreed: ['']
+      species: '',
+      gender: '',
+      searchForNameAndBreed: ''
     });
 
     this.animals.set(this.route.snapshot.data['animalsData'] || []);
@@ -72,19 +72,42 @@ export class HomePageComponent extends UnsubscribeOnDestroy implements OnInit {
 
   private setupFormListener(): void {
     this.filtersForm.valueChanges
-      .pipe(takeUntil(this.destroy$))
+      .pipe(
+        distinctUntilChanged(),
+        debounceTime(500),
+        takeUntil(this.destroy$)
+      )
       .subscribe((formValues: FiltersForm) => {
+        let limit: number | undefined = undefined;
         this.page = 1;
+
+        if (formValues.searchForNameAndBreed) {
+          limit = 0;
+        }
         this.animals.set([]);
-        this.getFilteredAnimalsData(this.page, 10, formValues.species, formValues.gender, formValues.searchForNameAndBreed);
+
+        this.getFilteredAnimalsData(this.page, limit, formValues.species, formValues.gender, formValues.searchForNameAndBreed);
       });
   }
 
   private setupInfiniteScroll(): void {
+    let isScrolled = false;
+
+    window.addEventListener('scroll', () => {
+      isScrolled = true;
+    });
+
     const observer = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting) {
+      if (entries[0].isIntersecting && isScrolled) {
         this.page++;
-        this.getFilteredAnimalsData(this.page, 10, this.filtersForm.value.species, this.filtersForm.value.gender, this.filtersForm.value.searchForNameAndBreed);
+        this.getFilteredAnimalsData(
+          this.page,
+          10,
+          this.filtersForm.value.species,
+          this.filtersForm.value.gender,
+          this.filtersForm.value.searchForNameAndBreed
+        );
+        isScrolled = false;
       }
     });
 
