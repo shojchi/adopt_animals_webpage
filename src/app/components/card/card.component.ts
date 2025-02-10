@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
-import { Router } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { TitleCasePipe } from '@angular/common';
 import { AnimalFullInfo } from '../../shared/interfaces/animaData';
 
@@ -11,7 +11,8 @@ import { AnimalFullInfo } from '../../shared/interfaces/animaData';
   imports: [
     MatCardModule,
     MatButtonModule,
-    TitleCasePipe
+    TitleCasePipe,
+    RouterLink
   ],
   templateUrl: './card.component.html',
   styleUrl: './card.component.scss',
@@ -19,9 +20,4 @@ import { AnimalFullInfo } from '../../shared/interfaces/animaData';
 })
 export class CardComponent {
   @Input() petData: Partial<AnimalFullInfo> = {};
-  private router = inject(Router);
-
-  goToDetailsPage(id: number): void {
-    this.router.navigate(['/details'], { queryParams: { id } });
-  }
 }

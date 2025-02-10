@@ -21,6 +21,7 @@ import { AnimalFullInfo } from '../../shared/interfaces/animaData';
 import { FiltersForm } from '../../shared/interfaces/filtersForm';
 import { UnsubscribeOnDestroy } from '../../shared/unsubscribeOnDestroy';
 import { takeUntil } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   standalone: true,
@@ -46,13 +47,10 @@ export class HomePageComponent extends UnsubscribeOnDestroy implements OnInit {
 
   private animalsDataService = inject(AnimalsDataService);
   private fb: FormBuilder = inject(FormBuilder);
-  private page: number = 1;
+  private route = inject(ActivatedRoute);
+  private page = 1;
 
-  // public genderOptions = ['All', 'Male', 'Female'];
-  // public kindOptions = ['All', 'Cat', 'Dog'];
-  public searchForNameAndBreed: string = '';
   public filtersForm: FormGroup;
-  public allAnimalsData: AnimalFullInfo[] = [];
   animals: WritableSignal<AnimalFullInfo[]> = signal<AnimalFullInfo[]>([]);
   isLoading: WritableSignal<boolean> = signal<boolean>(false);
 
@@ -63,37 +61,34 @@ export class HomePageComponent extends UnsubscribeOnDestroy implements OnInit {
       gender: [''],
       searchForNameAndBreed: ['']
     });
+
+    this.animals.set(this.route.snapshot.data['animalsData'] || []);
   }
 
   ngOnInit(): void {
-    this.getFilteredAnimalsData(this.page);
+    this.setupFormListener();
+    this.setupInfiniteScroll();
+  }
 
+  private setupFormListener(): void {
     this.filtersForm.valueChanges
       .pipe(takeUntil(this.destroy$))
       .subscribe((formValues: FiltersForm) => {
-      let limit: number | undefined = undefined;
-      this.page = 1;
-      this.allAnimalsData = [];
+        this.page = 1;
+        this.animals.set([]);
+        this.getFilteredAnimalsData(this.page, 10, formValues.species, formValues.gender, formValues.searchForNameAndBreed);
+      });
+  }
 
-      if (formValues.searchForNameAndBreed) {
-        limit = 0;
+  private setupInfiniteScroll(): void {
+    const observer = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting) {
+        this.page++;
+        this.getFilteredAnimalsData(this.page, 10, this.filtersForm.value.species, this.filtersForm.value.gender, this.filtersForm.value.searchForNameAndBreed);
       }
-      this.animals.set([]);
-
-      this.getFilteredAnimalsData(this.page, limit, formValues.species, formValues.gender, formValues.searchForNameAndBreed);
     });
 
-    //TODO: need to fix problem with calling intersection right after init uploading data / loading val??
-    setTimeout(() => {
-      const observer = new IntersectionObserver(entries => {
-        if (entries[0].isIntersecting) {
-          this.page++;
-          this.getFilteredAnimalsData(this.page, 10, this.filtersForm.value.species, this.filtersForm.value.gender, this.filtersForm.value.searchForNameAndBreed);
-        }
-      });
-
-      observer.observe(this.scrollAnchor.nativeElement);
-    }, 1000)
+    observer.observe(this.scrollAnchor.nativeElement);
   }
 
   getFilteredAnimalsData(page: number = 1, limit: number = 10, species?: string, gender?: string, searchText?: string): void {

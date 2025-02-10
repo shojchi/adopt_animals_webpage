@@ -1,11 +1,9 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatButton } from '@angular/material/button';
-import { AnimalsDataService } from '../../shared/services/data/animals-data.service';
 import { ActivatedRoute } from '@angular/router';
 import { TitleCasePipe } from '@angular/common';
 import { NotificationsService } from '../../shared/services/notifications/notifications.service';
 import { AnimalFullInfo } from '../../shared/interfaces/animaData';
-import { takeUntil } from 'rxjs';
 import { UnsubscribeOnDestroy } from '../../shared/unsubscribeOnDestroy';
 
 @Component({
@@ -19,8 +17,7 @@ import { UnsubscribeOnDestroy } from '../../shared/unsubscribeOnDestroy';
   styleUrl: './detailed-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DetailedPageComponent extends UnsubscribeOnDestroy implements OnInit {
-  private animalsDataService = inject(AnimalsDataService);
+export class DetailedPageComponent extends UnsubscribeOnDestroy {
   private _notificationsService = inject(NotificationsService);
   private route = inject(ActivatedRoute);
 
@@ -29,19 +26,7 @@ export class DetailedPageComponent extends UnsubscribeOnDestroy implements OnIni
 
   constructor() {
     super();
-  }
-
-  ngOnInit(): void {
-    this.getAnimalDetailedData();
-  }
-
-  getAnimalDetailedData(): void {
-    const id = this.route.snapshot.queryParamMap.get('id');
-    this.animalsDataService.getAnimalDetailedData(id as string)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res: AnimalFullInfo) => {
-      this.animalData = res
-    });
+    this.animalData = this.route.snapshot.data['animalData'];
   }
 
   makeAdoption(): void {

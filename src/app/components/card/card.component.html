@@ -1,14 +1,18 @@
 <mat-card class="animal-card" appearance="outlined">
   <mat-card-header>
-    <mat-card-title class="animal-name">{{petData.name}}</mat-card-title>
+    <mat-card-title class="animal-name">{{ petData.name | titlecase }}</mat-card-title>
   </mat-card-header>
   <img class="animal-img" mat-card-image src="{{petData.mainPhotoUrl}}" alt="animal photo">
   <mat-card-content>
-    <p>Gender: {{petData.gender | titlecase}}</p>
-    <p>Breed: {{petData.breed}}</p>
-    <p>Age: {{petData.age}}</p>
+    <p>Gender: {{ petData.gender | titlecase }}</p>
+    <p>Breed: {{ petData.breed | titlecase }}</p>
+    <p>Age: {{ petData.age }}</p>
   </mat-card-content>
   <mat-card-actions class="actions-container">
-    <button class="show-more-button" mat-flat-button (click)="goToDetailsPage(petData.id!)">Show more</button>
+    <button class="show-more-button"
+            mat-flat-button
+            [routerLink]="['/animal-details', petData.id]">
+      Show more
+    </button>
   </mat-card-actions>
 </mat-card>
