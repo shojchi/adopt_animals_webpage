@@ -3,6 +3,8 @@ import { MatToolbar } from '@angular/material/toolbar';
 import { RouterModule } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NotificationsService } from './shared/services/notifications/notifications.service';
+import { takeUntil } from 'rxjs';
+import { UnsubscribeOnDestroy } from './shared/unsubscribeOnDestroy';
 
 @Component({
   standalone: true,
@@ -12,12 +14,18 @@ import { NotificationsService } from './shared/services/notifications/notificati
   styleUrl: './app.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AppComponent implements OnInit {
+export class AppComponent extends UnsubscribeOnDestroy implements OnInit {
   private _snackBar = inject(MatSnackBar);
   private _notificationsService = inject(NotificationsService);
 
+  constructor() {
+    super();
+  }
+
   ngOnInit(): void {
-    this._notificationsService.getSharedData().subscribe(sharedData => {
+    this._notificationsService.getSharedData()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(sharedData => {
       this.openSnackBar(`You successfully adopted ${String(sharedData).charAt(0).toUpperCase() + String(sharedData).slice(1)}!`, 'Dismiss');
     })
   }

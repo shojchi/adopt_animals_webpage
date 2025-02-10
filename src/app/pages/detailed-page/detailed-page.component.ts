@@ -5,6 +5,8 @@ import { ActivatedRoute } from '@angular/router';
 import { TitleCasePipe } from '@angular/common';
 import { NotificationsService } from '../../shared/services/notifications/notifications.service';
 import { AnimalFullInfo } from '../../shared/interfaces/animaData';
+import { takeUntil } from 'rxjs';
+import { UnsubscribeOnDestroy } from '../../shared/unsubscribeOnDestroy';
 
 @Component({
   standalone: true,
@@ -17,7 +19,7 @@ import { AnimalFullInfo } from '../../shared/interfaces/animaData';
   styleUrl: './detailed-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DetailedPageComponent implements OnInit {
+export class DetailedPageComponent extends UnsubscribeOnDestroy implements OnInit {
   private animalsDataService = inject(AnimalsDataService);
   private _notificationsService = inject(NotificationsService);
   private route = inject(ActivatedRoute);
@@ -25,13 +27,19 @@ export class DetailedPageComponent implements OnInit {
   public animalData: Partial<AnimalFullInfo> = {};
   public showAdoptButton: boolean = true;
 
-  ngOnInit(): void {
-    this.getPetData();
+  constructor() {
+    super();
   }
 
-  getPetData(): void {
+  ngOnInit(): void {
+    this.getAnimalDetailedData();
+  }
+
+  getAnimalDetailedData(): void {
     const id = this.route.snapshot.queryParamMap.get('id');
-    this.animalsDataService.getAnimalDetailedData(id as string).subscribe((res: AnimalFullInfo) => {
+    this.animalsDataService.getAnimalDetailedData(id as string)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: AnimalFullInfo) => {
       this.animalData = res
     });
   }

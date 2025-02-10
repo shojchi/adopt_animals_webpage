@@ -19,6 +19,8 @@ import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { AnimalFullInfo } from '../../shared/interfaces/animaData';
 import { FiltersForm } from '../../shared/interfaces/filtersForm';
+import { UnsubscribeOnDestroy } from '../../shared/unsubscribeOnDestroy';
+import { takeUntil } from 'rxjs';
 
 @Component({
   standalone: true,
@@ -39,7 +41,7 @@ import { FiltersForm } from '../../shared/interfaces/filtersForm';
   styleUrl: './home-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class HomePageComponent implements OnInit {
+export class HomePageComponent extends UnsubscribeOnDestroy implements OnInit {
   @ViewChild('scrollAnchor', { static: true }) scrollAnchor!: ElementRef;
 
   private animalsDataService = inject(AnimalsDataService);
@@ -55,6 +57,7 @@ export class HomePageComponent implements OnInit {
   isLoading: WritableSignal<boolean> = signal<boolean>(false);
 
   constructor() {
+    super();
     this.filtersForm = this.fb.group({
       species: [''],
       gender: [''],
@@ -65,7 +68,9 @@ export class HomePageComponent implements OnInit {
   ngOnInit(): void {
     this.getFilteredAnimalsData(this.page);
 
-    this.filtersForm.valueChanges.subscribe((formValues: FiltersForm) => {
+    this.filtersForm.valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((formValues: FiltersForm) => {
       let limit: number | undefined = undefined;
       this.page = 1;
       this.allAnimalsData = [];
@@ -93,9 +98,11 @@ export class HomePageComponent implements OnInit {
 
   getFilteredAnimalsData(page: number = 1, limit: number = 10, species?: string, gender?: string, searchText?: string): void {
     this.isLoading.set(true);
-    this.animalsDataService.getFilteredAnimalsData(page, limit, species, gender, searchText).subscribe((res: AnimalFullInfo[]) => {
-      this.animals.set([...this.animals(), ...res]);
-      this.isLoading.set(false);
-    })
+    this.animalsDataService.getFilteredAnimalsData(page, limit, species, gender, searchText)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: AnimalFullInfo[]) => {
+        this.animals.set([...this.animals(), ...res]);
+        this.isLoading.set(false);
+      })
   }
 }
