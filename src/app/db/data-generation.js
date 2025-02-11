@@ -72,7 +72,6 @@ const generateData = (id, name, breed, species, images) => {
     mainPhotoUrl: images[randomizer(6)]
   }
 }
-//TODO: change mock data to randomly generate
 
 const dataHydration = () => {
   for (let i = 0; i < 50; i++) {

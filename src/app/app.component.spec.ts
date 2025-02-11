@@ -47,12 +47,10 @@ describe('AppComponent', () => {
     component = fixture.componentInstance;
     spyOn(component, 'openSnackBar').and.callThrough();
 
-    fixture.detectChanges(); // Запускаємо Angular lifecycle hooks
+    fixture.detectChanges();
 
-    // Тепер емулюємо отримання повідомлення
     mockNotificationsService.emitData('test message');
 
-    // Використовуємо `fixture.whenStable()`, щоб дочекатися виконання асинхронного коду
     fixture.whenStable().then(() => {
       expect(component.openSnackBar).toHaveBeenCalledWith(
         'You successfully adopted Test message!',

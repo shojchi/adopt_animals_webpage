@@ -18,7 +18,7 @@ describe('AnimalsDataService', () => {
   });
 
   afterEach(() => {
-    httpMock.verify(); // Ensure no outstanding requests
+    httpMock.verify();
   });
 
   it('should be created', () => {

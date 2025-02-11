@@ -59,7 +59,7 @@ describe('animalListResolver', () => {
     mockAnimalsDataService.getFilteredAnimalsData.and.returnValue(of(mockData));
 
     runInInjectionContext(TestBed, () => {
-      const result = animalListResolver(mockRoute, mockState); // Викликаємо resolver у контексті
+      const result = animalListResolver(mockRoute, mockState);
 
       if (result instanceof Promise) {
         result.then((data) => {
